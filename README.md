@@ -36,10 +36,12 @@ We recommend using [bun](https://bun.sh) for faster startup times - MCP servers 
 ### For MSP Users
 
 ```bash
-# Using bunx (recommended)
 claude mcp add superops-msp -- bunx superops-msp
+```
 
-# Using npx
+Or with npx:
+
+```bash
 claude mcp add superops-msp -- npx -y superops-msp
 ```
 
@@ -72,10 +74,12 @@ Or with npx:
 ### For IT Teams Users
 
 ```bash
-# Using bunx (recommended)
 claude mcp add superops-it -- bunx superops-it
+```
 
-# Using npx
+Or with npx:
+
+```bash
 claude mcp add superops-it -- npx -y superops-it
 ```
 
@@ -115,6 +119,7 @@ Both packages provide these tools:
 | `get_superops_operation` | Get full details of a query or mutation |
 | `get_superops_type` | Get type definitions with all fields |
 | `list_superops_operations` | List all available operations |
+| `execute_graphql` | Execute a GraphQL query or mutation (requires API key) |
 
 ## API Endpoints
 

@@ -15,10 +15,12 @@ SuperOps MSP is for **Managed Service Providers** - IT companies that manage tec
 We recommend using [bun](https://bun.sh) for faster startup times - MCP servers start on every request, so speed matters.
 
 ```bash
-# Using bunx (recommended)
 bunx superops-msp
+```
 
-# Using npx
+Or with npx:
+
+```bash
 npx superops-msp
 ```
 
@@ -26,7 +28,9 @@ Or install globally:
 
 ```bash
 bun install -g superops-msp
-# or
+```
+
+```bash
 npm install -g superops-msp
 ```
 
@@ -35,10 +39,12 @@ npm install -g superops-msp
 ### Claude Code
 
 ```bash
-# Using bunx (recommended)
 claude mcp add superops-msp -- bunx superops-msp
+```
 
-# Using npx
+Or with npx:
+
+```bash
 claude mcp add superops-msp -- npx -y superops-msp
 ```
 
@@ -133,6 +139,30 @@ list_superops_operations({ type: "queries" })
 list_superops_operations({ type: "mutations" })
 list_superops_operations({ type: "all" })
 ```
+
+### `execute_graphql`
+
+Execute a GraphQL query or mutation against the SuperOps API. Requires `SUPEROPS_API_KEY` environment variable.
+
+```
+execute_graphql({
+  operation: "query { getTicket(id: \"123\") { id subject status } }"
+})
+
+execute_graphql({
+  operation: "mutation createTicket($input: CreateTicketInput!) { createTicket(input: $input) { id } }",
+  variables: { input: { subject: "New ticket", clientId: "456" } }
+})
+```
+
+**Environment variables:**
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SUPEROPS_API_KEY` | Yes | Your SuperOps API key |
+| `SUPEROPS_REGION` | No | `us` (default) or `eu` |
+| `SUPEROPS_TIMEOUT` | No | Request timeout in ms (default: 30000) |
+| `SUPEROPS_READ_ONLY` | No | Set to `true` to block mutations |
 
 ## API Endpoints
 
