@@ -33,7 +33,10 @@ async function loadApiData() {
 // Create server
 const server = new Server(
     { name: SERVER_NAME, version: SERVER_VERSION },
-    { capabilities: { tools: {} } }
+    {
+        instructions: 'Use this server when the user needs help with the SuperOps IT Teams GraphQL API for internal IT departments. Provides documentation for tickets, assets, departments, users, and internal service desk operations. Search for API queries, mutations, and type definitions.',
+        capabilities: { tools: {} }
+    }
 );
 
 // List available tools
