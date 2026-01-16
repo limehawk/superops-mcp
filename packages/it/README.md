@@ -27,11 +27,11 @@ npx superops-it@latest
 Or install globally:
 
 ```bash
-bun install -g superops-it
+bun install -g superops-it@latest
 ```
 
 ```bash
-npm install -g superops-it
+npm install -g superops-it@latest
 ```
 
 ## Configuration

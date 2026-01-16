@@ -27,11 +27,11 @@ npx superops-msp@latest
 Or install globally:
 
 ```bash
-bun install -g superops-msp
+bun install -g superops-msp@latest
 ```
 
 ```bash
-npm install -g superops-msp
+npm install -g superops-msp@latest
 ```
 
 ## Configuration
