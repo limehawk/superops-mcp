@@ -119,7 +119,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             {
                 name: 'execute_graphql',
-                description: `Execute a GraphQL query or mutation against the ${PRODUCT_NAME} API. Requires SUPEROPS_API_KEY environment variable. Use search_superops_api and get_superops_operation to discover available operations.`,
+                description: `Execute a GraphQL query or mutation against the ${PRODUCT_NAME} API. Requires SUPEROPS_API_KEY environment variable.
+
+IMPORTANT: Before constructing queries, you MUST look up the correct field names and syntax:
+1. Call get_superops_operation to get the query template and see the input type name
+2. Call get_superops_type for the input type (e.g., ListInfoInput) to see exact field names (pageSize not limit)
+3. Call get_superops_type for any nested types (e.g., SortInput, SortOrder) to see enum values (use DESC not "desc")
+4. Call get_superops_type for the return type (e.g., Ticket, Client) to see available fields (accountId not id)
+
+Do NOT guess field names - they are non-standard. Always look them up first.`,
                 inputSchema: {
                     type: 'object',
                     properties: {
