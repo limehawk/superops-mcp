@@ -1,6 +1,6 @@
 {
   "name": "superops-it",
-  "version": "1.1.15",
+  "version": "1.1.16",
   "description": "MCP server for SuperOps IT Teams GraphQL API documentation",
   "type": "module",
   "main": "src/index.mjs",
