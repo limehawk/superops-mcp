@@ -29,7 +29,22 @@ export class SuperOpsAPIError extends Error {
 
   static formatMessage(status, body) {
     if (status === 200 && Array.isArray(body)) {
-      return body.map(e => e.message).join('; ');
+      // Try to extract message fields first
+      const messages = body.map(e => e.message).filter(Boolean);
+      if (messages.length > 0) {
+        return messages.join('; ');
+      }
+      // SuperOps sometimes returns null message with details in extensions.clientError
+      const clientErrors = body.flatMap(e =>
+        e.extensions?.clientError?.map(ce =>
+          `${ce.code}: ${ce.param?.attributes?.join(', ') || 'unknown'}`
+        ) || []
+      );
+      if (clientErrors.length > 0) {
+        return clientErrors.join('; ');
+      }
+      // Fallback to full error structure
+      return JSON.stringify(body, null, 2);
     }
     return `HTTP ${status}: ${body?.message || body?.error || 'Request failed'}`;
   }
@@ -113,7 +128,14 @@ export class SuperOpsClient {
           signal: controller.signal
         });
 
-        const body = await response.json();
+        const rawText = await response.text();
+
+        let body;
+        try {
+          body = JSON.parse(rawText);
+        } catch (e) {
+          throw new Error(`Invalid JSON response (HTTP ${response.status}): ${rawText.substring(0, 200)}`);
+        }
 
         if (!response.ok) {
           throw new SuperOpsAPIError(response.status, body, context);
