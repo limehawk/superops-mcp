@@ -86,24 +86,18 @@ const GET_TICKET_CONVERSATION_LIST_QUERY = `
       time
       user
       toUsers {
-        userId
-        name
-        email
+        user
       }
       ccUsers {
-        userId
-        name
-        email
+        user
       }
       bccUsers {
-        userId
-        name
-        email
+        user
       }
       attachments {
-        name
-        size
-        downloadUrl
+        fileName
+        originalFileName
+        fileSize
       }
       type
     }
@@ -118,9 +112,9 @@ const GET_TICKET_NOTE_LIST_QUERY = `
       addedOn
       content
       attachments {
-        name
-        size
-        downloadUrl
+        fileName
+        originalFileName
+        fileSize
       }
       privacyType
     }
@@ -1012,6 +1006,17 @@ export async function handleTicketTool(name, args, client) {
       });
 
       const conversations = data.getTicketConversationList || [];
+      // Transform recipient fields (user is now a JSON scalar inside each item)
+      const extractUsers = (users) => (users || []).map(u => u.user);
+      // Transform attachment fields to consistent names
+      const transformAttachments = (attachments) => (attachments || []).map(a => ({
+        name: a.fileName || a.originalFileName,
+        fileName: a.fileName,
+        originalFileName: a.originalFileName,
+        size: a.fileSize,
+        fileSize: a.fileSize
+      }));
+
       return {
         ticketId: args.ticketId,
         conversationCount: conversations.length,
@@ -1021,9 +1026,9 @@ export async function handleTicketTool(name, args, client) {
           time: c.time,
           user: c.user,
           type: c.type,
-          toUsers: c.toUsers,
-          ccUsers: c.ccUsers,
-          attachments: c.attachments
+          toUsers: extractUsers(c.toUsers),
+          ccUsers: extractUsers(c.ccUsers),
+          attachments: transformAttachments(c.attachments)
         })),
         _meta: { tool: 'get_ticket_conversation' }
       };
@@ -1035,6 +1040,15 @@ export async function handleTicketTool(name, args, client) {
       });
 
       const notes = data.getTicketNoteList || [];
+      // Transform attachment fields to consistent names
+      const transformAttachments = (attachments) => (attachments || []).map(a => ({
+        name: a.fileName || a.originalFileName,
+        fileName: a.fileName,
+        originalFileName: a.originalFileName,
+        size: a.fileSize,
+        fileSize: a.fileSize
+      }));
+
       return {
         ticketId: args.ticketId,
         noteCount: notes.length,
@@ -1044,7 +1058,7 @@ export async function handleTicketTool(name, args, client) {
           addedBy: n.addedBy,
           addedOn: n.addedOn,
           privacyType: n.privacyType,
-          attachments: n.attachments
+          attachments: transformAttachments(n.attachments)
         })),
         _meta: { tool: 'get_ticket_notes' }
       };
