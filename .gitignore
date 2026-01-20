@@ -9,8 +9,9 @@ node_modules/
 # Lock files (using bun)
 package-lock.json
 
-# Project docs (internal planning)
-/docs/
+# Project docs (internal planning, except plans)
+/docs/*
+!/docs/plans/
 
 # Logs
 *.log
@@ -35,3 +36,4 @@ debug-*.png
 # Claude Code
 .claude/
 CLAUDE.md
+.mcp.json
