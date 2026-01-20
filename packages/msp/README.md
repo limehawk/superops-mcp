@@ -45,6 +45,43 @@ claude mcp add superops-msp \
   -- bunx superops-msp@latest
 ```
 
+#### Installation Scopes
+
+MCP servers can be configured at three different scopes:
+
+**Local scope** (default) - Private to you, only accessible in the current project:
+```bash
+claude mcp add superops-msp \
+  -e SUPEROPS_API_KEY=your-api-key \
+  -e SUPEROPS_SUBDOMAIN=your-subdomain \
+  --scope local \
+  -- bunx superops-msp@latest
+```
+
+**Project scope** - Shared with your team via `.mcp.json` (checked into version control):
+```bash
+claude mcp add superops-msp \
+  -e SUPEROPS_API_KEY=your-api-key \
+  -e SUPEROPS_SUBDOMAIN=your-subdomain \
+  --scope project \
+  -- bunx superops-msp@latest
+```
+
+**User scope** - Available across all your projects:
+```bash
+claude mcp add superops-msp \
+  -e SUPEROPS_API_KEY=your-api-key \
+  -e SUPEROPS_SUBDOMAIN=your-subdomain \
+  --scope user \
+  -- bunx superops-msp@latest
+```
+
+| Scope | Storage | Best For |
+|-------|---------|----------|
+| Local | `~/.claude.json` (project path) | Personal servers, sensitive credentials |
+| Project | `.mcp.json` in project root | Team collaboration, shared tools |
+| User | `~/.claude.json` (global) | Personal utilities across projects |
+
 ### Claude Desktop
 
 Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS):
