@@ -7,6 +7,14 @@
  */
 
 // ============================================================================
+// Constants
+// ============================================================================
+
+// Non-closed statuses for filtering open tickets
+// Note: SuperOps API doesn't support "is not" operator, so we use "includes" with all non-closed statuses
+const NON_CLOSED_STATUSES = ['Open', 'On Hold', 'On-Site', 'Waiting on third party', 'Abandoned', 'Resolved'];
+
+// ============================================================================
 // GraphQL Fragments and Queries
 // ============================================================================
 
@@ -63,8 +71,8 @@ const GET_TICKET_LIST_QUERY = `
       listInfo {
         page
         pageSize
-        totalRecords
-        totalPages
+        totalCount
+        hasMore
       }
     }
   }
@@ -738,8 +746,8 @@ function formatTicketListResponse(data, toolName) {
     pagination: {
       page: listInfo.page,
       pageSize: listInfo.pageSize,
-      totalRecords: listInfo.totalRecords,
-      totalPages: listInfo.totalPages
+      totalCount: listInfo.totalCount,
+      hasMore: listInfo.hasMore
     },
     _meta: { tool: toolName }
   };
@@ -789,11 +797,11 @@ export async function handleTicketTool(name, args, client) {
     case 'get_open_tickets': {
       const conditions = [];
 
-      // Exclude closed tickets
+      // Filter to non-closed tickets
       conditions.push({
         attribute: 'status',
-        operator: 'is not',
-        value: 'Closed'
+        operator: 'includes',
+        value: NON_CLOSED_STATUSES
       });
 
       if (args.clientId) {
@@ -870,11 +878,11 @@ export async function handleTicketTool(name, args, client) {
         };
       }
 
-      // Exclude closed tickets by default
+      // Filter to non-closed tickets by default
       conditions.push({
         attribute: 'status',
-        operator: 'is not',
-        value: 'Closed'
+        operator: 'includes',
+        value: NON_CLOSED_STATUSES
       });
 
       const input = buildListInput({
@@ -948,12 +956,12 @@ export async function handleTicketTool(name, args, client) {
         };
       }
 
-      // Exclude closed tickets
+      // Filter to non-closed tickets
       const conditions = [
         {
           attribute: 'status',
-          operator: 'is not',
-          value: 'Closed'
+          operator: 'includes',
+          value: NON_CLOSED_STATUSES
         },
         {
           operator: 'OR',

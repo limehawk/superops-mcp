@@ -92,8 +92,8 @@ const QUERIES = {
       listInfo {
         page
         pageSize
-        totalPages
         totalCount
+        hasMore
       }
     }
   }`,
@@ -357,8 +357,8 @@ export async function handleLookupTool(name, args, client) {
         pagination: {
           page: result.listInfo.page,
           pageSize: result.listInfo.pageSize,
-          totalPages: result.listInfo.totalPages,
-          totalCount: result.listInfo.totalCount
+          totalCount: result.listInfo.totalCount,
+          hasMore: result.listInfo.hasMore
         }
       };
     }
