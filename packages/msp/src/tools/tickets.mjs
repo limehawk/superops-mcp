@@ -145,24 +145,18 @@ const CREATE_TICKET_CONVERSATION_MUTATION = `
       time
       user
       toUsers {
-        userId
-        name
-        email
+        user
       }
       ccUsers {
-        userId
-        name
-        email
+        user
       }
       bccUsers {
-        userId
-        name
-        email
+        user
       }
       attachments {
-        name
-        size
-        downloadUrl
+        fileName
+        originalFileName
+        fileSize
       }
       type
     }
@@ -177,9 +171,9 @@ const CREATE_TICKET_NOTE_MUTATION = `
       addedOn
       content
       attachments {
-        name
-        size
-        downloadUrl
+        fileName
+        originalFileName
+        fileSize
       }
       privacyType
     }
