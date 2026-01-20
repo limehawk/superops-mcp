@@ -9,9 +9,8 @@ node_modules/
 # Lock files (using bun)
 package-lock.json
 
-# Project docs (internal planning, except plans)
-/docs/*
-!/docs/plans/
+# Project docs (internal planning)
+/docs/
 
 # Logs
 *.log
