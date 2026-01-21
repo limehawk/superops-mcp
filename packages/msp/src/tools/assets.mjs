@@ -757,11 +757,26 @@ export async function handleAssetTool(name, args, client) {
     }
 
     case 'get_unmonitored_assets': {
+      // Note: Unmonitored assets API doesn't support all asset fields (e.g., primaryMac causes errors)
+      // Using a reduced field set that works reliably
       const query = `
         query getUnMonitoredAssetList($input: ListInfoInput!) {
           getUnMonitoredAssetList(input: $input) {
             assets {
-              ${ASSET_FIELDS}
+              assetId
+              name
+              assetClass
+              client
+              site
+              requester
+              serialNumber
+              manufacturer
+              model
+              hostName
+              platform
+              status
+              lastCommunicatedTime
+              deviceCategory
             }
             listInfo {
               ${LIST_INFO_FIELDS}

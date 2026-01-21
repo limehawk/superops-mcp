@@ -117,7 +117,6 @@ const QUERIES = {
       deviceCategoryId
       name
       custom
-      assetClass
       createdTime
     }
   }`,
@@ -374,13 +373,14 @@ export async function handleLookupTool(name, args, client) {
     }
 
     case 'get_device_categories': {
-      const input = {};
-      if (args.module) input.module = args.module;
+      const input = {
+        // Default to both modules if not specified - API requires module to be set
+        module: args.module || ['ENDPOINT', 'NM_ASSET']
+      };
       if (args.custom !== undefined) input.custom = args.custom;
       if (args.classId) input.classId = args.classId;
 
-      const variables = Object.keys(input).length > 0 ? { input } : {};
-      const data = await client.execute(QUERIES.getDeviceCategories, variables);
+      const data = await client.execute(QUERIES.getDeviceCategories, { input });
       return formatResult(data.getDeviceCategories, 'deviceCategories');
     }
 

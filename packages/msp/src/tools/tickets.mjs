@@ -144,20 +144,6 @@ const CREATE_TICKET_CONVERSATION_MUTATION = `
       content
       time
       user
-      toUsers {
-        user
-      }
-      ccUsers {
-        user
-      }
-      bccUsers {
-        user
-      }
-      attachments {
-        fileName
-        originalFileName
-        fileSize
-      }
       type
     }
   }
@@ -170,11 +156,6 @@ const CREATE_TICKET_NOTE_MUTATION = `
       addedBy
       addedOn
       content
-      attachments {
-        fileName
-        originalFileName
-        fileSize
-      }
       privacyType
     }
   }
@@ -666,6 +647,7 @@ function buildDateCondition(attribute, operator, value) {
 
 /**
  * Build ListInfoInput with conditions
+ * Note: SuperOps API uses joinOperator/operands for compound conditions, not operator/value
  */
 function buildListInput({ page = 1, pageSize = 25, conditions = [], sort = [] }) {
   const input = {
@@ -676,10 +658,10 @@ function buildListInput({ page = 1, pageSize = 25, conditions = [], sort = [] })
   if (conditions.length === 1) {
     input.condition = conditions[0];
   } else if (conditions.length > 1) {
-    // Multiple conditions need AND logic
+    // Multiple conditions need AND logic using joinOperator/operands syntax
     input.condition = {
-      operator: 'AND',
-      value: conditions
+      joinOperator: 'AND',
+      operands: conditions
     };
   }
 
@@ -890,7 +872,7 @@ export async function handleTicketTool(name, args, client) {
 
       const conditions = [{
         attribute: 'createdTime',
-        operator: 'greater than',
+        operator: 'after',
         value: sinceDate
       }];
 
@@ -944,7 +926,8 @@ export async function handleTicketTool(name, args, client) {
         };
       }
 
-      // Filter to non-closed tickets
+      // Filter to non-closed tickets AND (high priority OR SLA violated)
+      // Using joinOperator/operands syntax for compound conditions
       const conditions = [
         {
           attribute: 'status',
@@ -952,8 +935,8 @@ export async function handleTicketTool(name, args, client) {
           value: NON_CLOSED_STATUSES
         },
         {
-          operator: 'OR',
-          value: orConditions
+          joinOperator: 'OR',
+          operands: orConditions
         }
       ];
 
@@ -1065,7 +1048,8 @@ export async function handleTicketTool(name, args, client) {
       const input = {
         subject: args.subject,
         client: { accountId: args.clientId },
-        source: args.source || 'FORM'
+        source: args.source || 'FORM',
+        requestType: 'Incident' // Required field - default to Incident
       };
 
       if (args.description) {
