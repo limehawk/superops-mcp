@@ -43,22 +43,10 @@ const CLIENT_USER_FIELDS = `
   name
   email
   contactNumber
-  reportingManager {
-    userId
-    name
-  }
-  site {
-    id
-    name
-  }
-  role {
-    roleId
-    name
-  }
-  client {
-    accountId
-    name
-  }
+  reportingManager
+  site
+  role
+  client
   customFields
 `;
 
